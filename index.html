@@ -57,10 +57,11 @@
             inset: 0;
             z-index: 9999;
             pointer-events: none;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.035;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAElBMVEUAAAAAAAAAAAAAAAAAAAAAAADgKxmiAAAABnRSTlMFChUaHyQEcIMAAAA7SURBVDjLY2AYBaNg2AImBkYGBiYGJgYmBkYGJoYGBiYGRgYmBiYGJgZGBiYGJgYmBkYGJgYmhtEAAAAxAAPpZybTAAAAAElFTkSuQmCC");
             background-repeat: repeat;
-            background-size: 256px 256px;
+            background-size: 48px 48px;
+            contain: strict;
         }
 
         /* ── CURSOR GLOW ────────────────────────── */
@@ -71,21 +72,25 @@
             background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
             pointer-events: none;
             z-index: 9998;
-            transform: translate(-50%, -50%);
+            transform: translate3d(-50%, -50%, 0);
             will-change: transform;
             opacity: 0;
             transition: opacity 0.4s ease;
+            contain: layout style size;
         }
 
         /* ── SCROLL PROGRESS ────────────────────── */
         .scroll-progress {
             position: fixed;
             top: 0; left: 0;
+            width: 100%;
             height: 2px;
             background: var(--white);
             z-index: 10001;
             transform-origin: left;
             transform: scaleX(0);
+            will-change: transform;
+            contain: layout style size;
         }
 
         /* ── PAGE LOADER ────────────────────────── */
@@ -146,14 +151,13 @@
             top: 0; left: 0; right: 0;
             z-index: 1000;
             background: transparent;
-            transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+            transition: background 0.3s ease, border-color 0.3s ease;
             border-bottom: 1px solid transparent;
+            contain: layout style;
         }
 
         #nav.scrolled {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.92);
             border-bottom-color: var(--border);
         }
 
@@ -198,13 +202,15 @@
             content: '';
             position: absolute;
             bottom: -4px; left: 0;
-            width: 0; height: 1px;
+            width: 100%; height: 1px;
             background: var(--white);
-            transition: width 0.4s var(--ease-out);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s var(--ease-out);
         }
 
         .nav-menu a:hover, .nav-menu a.active { color: var(--white); }
-        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+        .nav-menu a:hover::after, .nav-menu a.active::after { transform: scaleX(1); }
 
         .hamburger {
             display: none;
@@ -339,7 +345,7 @@
             letter-spacing: 0.2em;
             text-transform: uppercase;
             border: 1px solid;
-            transition: all 0.4s var(--ease-out);
+            transition: color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), background-color 0.4s var(--ease-out);
             position: relative;
             overflow: hidden;
             cursor: pointer;
@@ -425,14 +431,14 @@
             height: 100%;
             object-fit: cover;
             filter: grayscale(15%) brightness(0.9) contrast(1.05);
-            transition: filter 0.6s ease, transform 0.8s var(--ease-out);
+            transition: transform 0.8s var(--ease-out);
             transform: scale(1.05);
+            will-change: transform;
         }
 
         .img-reveal.revealed img { transform: scale(1); }
 
         .img-reveal:hover img {
-            filter: grayscale(0%) brightness(1.05) contrast(1.1);
             transform: scale(1.03);
         }
 
@@ -547,7 +553,7 @@
         }
 
         /* ── DESPERADOS ──────────────────────────── */
-        #desperados { position: relative; background: var(--bg); }
+        #desperados { position: relative; background: var(--bg); contain: layout style; }
 
         .desp-visual {
             display: grid;
@@ -578,12 +584,14 @@
             content: '';
             position: absolute;
             bottom: 0; left: 0;
-            width: 100%; height: 0;
+            width: 100%; height: 100%;
             background: rgba(255,255,255,0.02);
-            transition: height 0.5s var(--ease-out);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.5s var(--ease-out);
         }
 
-        .value-card:hover::before { height: 100%; }
+        .value-card:hover::before { transform: scaleY(1); }
 
         .value-num {
             font-family: var(--font-body);
@@ -612,7 +620,7 @@
         }
 
         /* ── THE ARENA ───────────────────────────── */
-        #arena { position: relative; background: var(--bg); }
+        #arena { position: relative; background: var(--bg); contain: layout style; }
 
         .arena-stats {
             display: flex;
@@ -660,7 +668,7 @@
         .arena-gallery .img-reveal:nth-child(8) { grid-column: 10 / 13; aspect-ratio: 3/4; }
 
         /* ── TESTIMONIALS ────────────────────────── */
-        #testament { position: relative; background: var(--bg); overflow: hidden; }
+        #testament { position: relative; background: var(--bg); overflow: hidden; contain: layout style; }
 
         .testimonial-carousel { position: relative; overflow: hidden; margin-top: 3rem; }
         .testimonial-track { display: flex; }
@@ -741,7 +749,8 @@
             height: 100%;
             background: var(--white);
             width: 33.333%;
-            transition: left 0.6s var(--ease-out);
+            will-change: transform;
+            transition: transform 0.6s var(--ease-out);
         }
 
         .carousel-count {
@@ -765,14 +774,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .carousel-arrow:hover { border-color: var(--white); color: var(--white); background: rgba(255,255,255,0.03); }
         .carousel-arrow svg { width: 12px; height: 12px; }
 
         /* ── HISTORY TIMELINE ────────────────────── */
-        #history { position: relative; background: var(--bg); }
+        #history { position: relative; background: var(--bg); contain: layout style; }
 
         .timeline { position: relative; max-width: 1000px; margin: 4rem auto 0; }
 
@@ -787,8 +796,11 @@
         .timeline-line-progress {
             position: absolute;
             top: 0; left: 0;
-            width: 100%; height: 0;
+            width: 100%; height: 100%;
             background: var(--text-dim);
+            transform: scaleY(0);
+            transform-origin: top;
+            will-change: transform;
         }
 
         .timeline-item {
@@ -932,7 +944,7 @@
             border: 1px solid var(--border);
             margin: -0.5px;
             color: var(--text-dim);
-            transition: all 0.3s var(--ease-out);
+            transition: color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
         }
 
         .social-links a:hover {
@@ -1358,7 +1370,7 @@
         function initScrollProgress() {
             gsap.to('#scrollProgress', {
                 scaleX: 1, ease: 'none',
-                scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.3 }
+                scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.5 }
             });
         }
 
@@ -1376,9 +1388,9 @@
             document.addEventListener('mouseleave', function() { glow.style.opacity = '0'; });
 
             (function move() {
-                cx += (mx - cx) * 0.08;
-                cy += (my - cy) * 0.08;
-                glow.style.transform = 'translate(' + (cx - 150) + 'px,' + (cy - 150) + 'px)';
+                cx += (mx - cx) * 0.1;
+                cy += (my - cy) * 0.1;
+                glow.style.transform = 'translate3d(' + (cx - 150) + 'px,' + (cy - 150) + 'px,0)';
                 requestAnimationFrame(move);
             })();
         }
@@ -1408,7 +1420,7 @@
             // Slow zoom on hero bg throughout scroll
             gsap.to('#heroBgImg', {
                 scale: 1.2, ease: 'none',
-                scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+                scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 2 }
             });
 
             // Letters stagger in
@@ -1583,9 +1595,9 @@
 
             // Image break text
             gsap.utils.toArray('.image-break-text h2').forEach(function(el) {
-                gsap.fromTo(el, { opacity: 0, scale: 0.85, letterSpacing: '0.3em' }, {
-                    opacity: 0.15, scale: 1, letterSpacing: '0.15em',
-                    duration: 1.2, ease: 'power4.out',
+                gsap.fromTo(el, { opacity: 0, scale: 0.9 }, {
+                    opacity: 0.15, scale: 1,
+                    duration: 1, ease: 'power3.out',
                     scrollTrigger: { trigger: el.closest('.image-break'), start: 'top 70%', toggleActions: 'play none none none' }
                 });
             });
@@ -1598,16 +1610,21 @@
         /* ── PARALLAX ────────────────────────────── */
         function initParallax() {
             if (isMobile) return;
+            // Image breaks + contact — gentle parallax
             gsap.utils.toArray('.image-break img').forEach(function(img) {
-                gsap.to(img, { y: '-15%', ease: 'none', scrollTrigger: { trigger: img.closest('.image-break'), start: 'top bottom', end: 'bottom top', scrub: 1 } });
+                gsap.to(img, { y: '-10%', ease: 'none', scrollTrigger: { trigger: img.closest('.image-break'), start: 'top bottom', end: 'bottom top', scrub: 2 } });
             });
             var cImg = document.getElementById('contactParallaxImg');
             if (cImg) {
-                gsap.to(cImg, { y: '-15%', ease: 'none', scrollTrigger: { trigger: cImg.closest('.contact-visual'), start: 'top bottom', end: 'bottom top', scrub: 1 } });
+                gsap.to(cImg, { y: '-10%', ease: 'none', scrollTrigger: { trigger: cImg.closest('.contact-visual'), start: 'top bottom', end: 'bottom top', scrub: 2 } });
             }
-            gsap.utils.toArray('.arena-gallery .img-reveal').forEach(function(item, i) {
-                gsap.to(item.querySelector('img'), { y: -(10 + (i % 3) * 8) + '%', ease: 'none', scrollTrigger: { trigger: item, start: 'top bottom', end: 'bottom top', scrub: 1.5 } });
-            });
+            // Gallery — single batch scrub on the whole gallery, not per-item
+            var gallery = document.querySelector('.arena-gallery');
+            if (gallery) {
+                gsap.utils.toArray('.arena-gallery .img-reveal img').forEach(function(img, i) {
+                    gsap.to(img, { y: -(8 + (i % 3) * 5) + '%', ease: 'none', scrollTrigger: { trigger: gallery, start: 'top bottom', end: 'bottom top', scrub: 2 } });
+                });
+            }
         }
 
         /* ── COUNTERS ──────────────────────────────── */
@@ -1638,7 +1655,7 @@
                 if (index >= total) index = 0;
                 ci = index;
                 gsap.to(track, { x: -(index * 100) + '%', duration: 0.7, ease: 'power4.inOut' });
-                gsap.to(progress, { left: (index / total * 100) + '%', duration: 0.56, ease: 'power4.inOut' });
+                gsap.to(progress, { x: (index * 100) + '%', duration: 0.56, ease: 'power4.inOut' });
                 count.textContent = (index + 1).toString().padStart(2, '0') + ' \u2014 ' + total.toString().padStart(2, '0');
             }
 
@@ -1662,7 +1679,7 @@
             var tl = document.getElementById('timeline');
             var pb = document.getElementById('timelineProgress');
             if (!tl || !pb) return;
-            gsap.to(pb, { height: '100%', ease: 'none', scrollTrigger: { trigger: tl, start: 'top 60%', end: 'bottom 60%', scrub: 0.5 } });
+            gsap.to(pb, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: tl, start: 'top 60%', end: 'bottom 60%', scrub: 1 } });
         }
 
         /* ── MOBILE MENU ───────────────────────────── */
